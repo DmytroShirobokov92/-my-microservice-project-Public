@@ -1,0 +1,63 @@
+# === Python / Django ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.coverage
+*.mo
+*.egg-info/
+.env
+.env.*
+
+# Django media/static
+/media/
+staticfiles/
+static/
+*.lock
+
+# === Virtualenv ===
+venv/
+django_venv/
+.envrc
+
+# === Docker ===
+*.pid
+*.seed
+*.bak
+*.swp
+*.tmp
+*.temp
+*.out
+
+# Docker volumes and data
+postgres_data/
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# === Nginx ===
+nginx/*.log
+nginx/logs/
+nginx/temp/
+
+# === Postgres ===
+*.sql
+*.dump
+*.backup
+
+# === System files ===
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# === Coverage / Testing ===
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
