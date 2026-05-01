@@ -1,0 +1,134 @@
+sudo ufw status
+sudo ufw enable
+sudo ufw allow [port number]
+sudo ufw deny [port number]
+---
+
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT - дозволити доступ до порту 8080(HTTP)
+
+iptables -L -n -v - перевірки активних правил
+
+iptables -A INPUT -p tcp --dport 22 -s 192.168.1.100 -j ACCEPT - відкривати порт конкретній IP-адресі
+
+sudo iptables -L INPUT -n --line-numbers - перегляд правил за номерами
+
+sudo iptables -D INPUT [rule number] - видалення правила 
+
+/sudo/ iptables -A INPUT -p tcp --dport 22 -s 192.168.1.199 -j DROP - заборона IP-адреси на порт
+
+-------
+
+
+ps aux | grep nginx    # Пошук процесів  
+pstree -p             # Дерево процесів  
+lsof -i :80           # Хто використовує порт 80?  
+
+---
+
+vmstat 1 – статистика CPU, пам'яті, IO.
+dstat – моніторинг мережі, дисків у реальному часі.
+
+-----
+
+strace -p PID   -- для аналізу системних викликів.
+journalctl -u service_name  -- Перевіряємо логи
+
+----
+
+Таблиця маршрутизації ---   ip route show.
+
+------
+
+Налаштування IP:
+
+ip addr add 192.168.1.100/24 dev eth0  – додати IP-адресу
+dhclient eth0 – отримати IP через DHCP
+ip link set eth0 up - увімкнути інтерфейс  
+----
+
+nftables (нова заміна iptables):
+nft add table inet filter  
+nft add chain inet filter input { type filter hook input priority 0 \; }  
+nft add rule inet filter input tcp dport 22 accept 
+----
+
+Приклад скрипта для бекапу:
+#!/bin/bash  
+backup_dir="/var/backups"  
+tar -czf "$backup_dir/$(date +%Y-%m-%d).tar.gz" /home/user 
+-----
+
+Перевірка помилок:
+if ! ping -c 1 google.com; then  
+  echo "Помилка: немає інтернету!" >&2  
+  exit 1  
+fi  
+
+Робота з масивами:
+files=(*.txt)  
+for file in "${files[@]}"; do  
+  echo "Обробляю $file"  
+done  
+----
+
+--terraform graf | dot -- 
+
+terraform graph | dot -Tpng > graph.png
+
+
+
+--з параметром для повторного підключення бекенду: --
+
+terraform init -reconfigure
+
+
+перевірка всіх існуючих ресурсів
+aws resourcegroupstaggingapi get-resources
+
+окремо по реурсах
+
+aws s3 ls
+
+aws dynamodb list-tables
+
+aws ec2 describe-vpcs
+
+aws ec2 describe-subnets
+
+aws ec2 describe-internet-gateways
+
+aws ec2 describe-nat-gateways
+
+aws ecr describe-repositories
+
+----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
