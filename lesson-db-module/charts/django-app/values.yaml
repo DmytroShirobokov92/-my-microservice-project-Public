@@ -1,0 +1,25 @@
+# lesson-db-module/charts/django-app/values.yaml
+
+image:
+  repository: 768405431530.dkr.ecr.eu-west-1.amazonaws.com/lesson-db-module
+  tag: v1.0.11
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8081
+  targetPort: 8081
+
+config:
+    POSTGRES_HOST: automatic_set_by_aurora
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: django_user
+    POSTGRES_DB: django_db
+    POSTGRES_PASSWORD: pass9764gd
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+  

@@ -1,0 +1,30 @@
+# lesson-db-module/modules/argo_cd/charts/values.yaml
+
+applications:
+  - name: django-app
+    namespace: argocd
+    project: default
+    source:
+      repoURL: https://github.com/DmytroShirobokov92/devops-ci-cd.git
+      path: lesson-db-module/charts/django-app
+      targetRevision: lesson-db-module
+      helm:
+        valueFiles:
+          - values.yaml
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+
+# repositories:
+#   - name: example-app
+#     url:  https://github.com/DmytroShirobokov92/devops-ci-cd.git
+#     # username: m.Holovskoi
+#     # password: YOUR_PASS
+
+# repoConfig:
+#   insecure: "true"
+#   enableLfs: "true"
