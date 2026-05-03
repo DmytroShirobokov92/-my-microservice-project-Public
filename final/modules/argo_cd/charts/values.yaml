@@ -1,0 +1,26 @@
+# final/modules/argo_cd/charts/values.yaml
+
+repositories:
+  - name: devops-ci-cd-repo
+    url: https://github.com/DmytroShirobokov92/devops-ci-cd.git
+    username: ""
+    password: ""
+
+applications:
+  - name: django-app
+    namespace: argocd
+    project: default
+    source:
+      repoURL: https://github.com/DmytroShirobokov92/devops-ci-cd.git
+      path: final/charts/django-app
+      targetRevision: final
+      helm:
+        valueFiles:
+          - values.yaml
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true

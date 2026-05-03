@@ -1,0 +1,23 @@
+# final/info_terraform.txt -- > change to terraform.tfvars and fill
+# -------------------------------
+#final/charts/django-app/values.yaml
+django_image_repository = "<your image repo>"
+postgres_host     = "<yourapp-db-cluster>.cluster-<your number>3.<region>.rds.amazonaws.com"
+postgres_port     = "5432"
+postgres_user     = "django_user"
+postgres_db       = "django_db"
+postgres_password = 
+
+# ---------------------------
+
+github_pat = yor github_pat
+
+jenkins_admin_user     = <add user>
+jenkins_admin_password = <add passwd>
+
+grafana_admin_password = 
+
+
+
+rds_username = 
+rds_password = 

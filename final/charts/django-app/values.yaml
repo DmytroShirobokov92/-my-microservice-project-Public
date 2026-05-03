@@ -1,0 +1,25 @@
+# final/charts/django-app/values.yaml
+
+image:
+  repository: 768405431530.dkr.ecr.eu-west-1.amazonaws.com/final
+  tag: v1.0.4
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8081
+
+config:
+    POSTGRES_HOST: myapp-db-cluster.cluster-cpoe6ggcw873.eu-west-1.rds.amazonaws.com
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: django_user
+    POSTGRES_DB: django_db
+    POSTGRES_PASSWORD: ""
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+  

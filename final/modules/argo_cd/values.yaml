@@ -1,0 +1,8 @@
+# final/modules/argo_cd/values.yaml
+
+server:
+  service:
+    type: LoadBalancer
+    port: 443
+
+
