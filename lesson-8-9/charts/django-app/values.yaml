@@ -1,0 +1,23 @@
+# lesson-8-9/charts/django-app/values.yaml
+
+image:
+  repository: 768405431530.dkr.ecr.eu-west-1.amazonaws.com/lesson-8-9-ecr-jenkins-argo-cd
+  tag: v1.0.1
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+config:
+    POSTGRES_HOST: db 
+    POSTGRES_PORT: 5432
+    POSTGRES_USER: django_user
+    POSTGRES_DB: django_db
+    POSTGRES_PASSWORD: ""
+
+autoscaler:
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+  

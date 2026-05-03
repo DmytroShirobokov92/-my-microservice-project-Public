@@ -1,0 +1,1 @@
+# lesson-8-9/docker/django/goit/__init__/py

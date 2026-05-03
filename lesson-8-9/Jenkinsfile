@@ -1,0 +1,82 @@
+// lesson-8-9/Jenkinsfile
+
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: jenkins-kaniko
+spec:
+  serviceAccountName: jenkins-sa
+  containers:
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:v1.16.0-debug
+      imagePullPolicy: Always
+      command:
+        - sleep
+      args:
+        - 99d
+    - name: git
+      image: bitnami/git:latest
+      command:
+        - sleep
+      args:
+        - 99d
+"""
+    }
+  }
+
+  environment {
+    ECR_REGISTRY = "768405431530.dkr.ecr.eu-west-1.amazonaws.com"
+    IMAGE_NAME   = "lesson-8-9-ecr-jenkins-argo-cd"
+    IMAGE_TAG    = "v1.0.${BUILD_NUMBER}"
+
+    COMMIT_EMAIL = "jenkins@localhost"
+    COMMIT_NAME  = "Jenkins CI"
+  }
+
+  stages {
+    stage('Build & Push Docker Image') {
+      steps {
+        container('kaniko') {
+          sh '''
+            /kaniko/executor \\
+              --context `pwd`/lesson-8-9 \\
+              --dockerfile docker/django/Dockerfile \\
+              --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
+              --destination=$ECR_REGISTRY/$IMAGE_NAME:latest \\
+              --cache=true \\
+              --insecure \\
+              --skip-tls-verify
+          '''
+        }
+      }
+    }
+    stage('Update Chart Tag in Git') {
+      steps {
+        container('git') {
+          withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
+            sh '''
+              git clone "https://$GIT_USERNAME:$GIT_PAT@github.com/GolovskoyNickolay/devops-ci-cd.git"              
+              cd devops-ci-cd
+              git checkout lesson-8-9
+
+              cd lesson-8-9/charts
+              sed -i "s/tag: .*/tag: $IMAGE_TAG/" django-app/values.yaml
+
+              git config user.email "$COMMIT_EMAIL"
+              git config user.name "$COMMIT_NAME"
+
+              git add django-app/values.yaml
+              git commit -m "Update image tag to $IMAGE_TAG"
+              git push origin lesson-8-9
+            '''
+          }
+        }
+      }
+    }
+  }
+}
