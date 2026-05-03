@@ -1,0 +1,11 @@
+# lesson-7/charts/django-chart/templates/configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+{{- range $key, $val := .Values.config }}
+  {{ $key }}: {{ $val | quote }}
+{{- end }}
+

@@ -1,0 +1,109 @@
+-- Kubectl (керування Kubernetes) --
+
+kubectl cluster-info
+
+kubectl get nodes
+
+kubectl get all -n default - всі namespac
+
+kubectl describe pod <pod-name> опис nodes
+
+kubectl logs <pod-name> - логи контейнера
+----------------------------------------------
+
+-- Minikube (локальний кластер Kubernetes) --
+
+minikube start
+
+minikube stop
+
+minikube service <service-name> -n <namespace> - отримати адресу для відкриття у браузері
+-----------------------------------------------
+
+-- Docker (контейнери та образи) --
+
+docker ps -a
+
+docker images
+-----------------------------------------------
+
+-- Helm (менеджер пакетів для Kubernetes) --
+
+helm repo add grafana https://grafana.github.io/helm-charts - Додавання репозиторію
+
+helm repo update - Оновлення репозиторію
+
+helm repo update - оповлення репозиторію
+
+helm repo list - Список репозиторіїв
+
+helm search repo grafana - пошук чарту
+
+helm install grafana grafana/grafana --namespace monitoring --create-namespace - встановлення чарту
+
+helm list -n monitoring - перевірка встановлення релізів
+
+
+helm upgrade grafana grafana/grafana -n monitoring -f values.yaml - Оновити реліз (наприклад, із новим values.yaml)
+
+
+helm uninstall grafana -n monitoring - Видалити реліз
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

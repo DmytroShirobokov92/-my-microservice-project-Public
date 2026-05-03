@@ -1,0 +1,275 @@
+sudo ufw status
+sudo ufw enable
+sudo ufw allow [port number]
+sudo ufw deny [port number]
+---
+
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT - дозволити доступ до порту 8080(HTTP)
+
+iptables -L -n -v - перевірки активних правил
+
+iptables -A INPUT -p tcp --dport 22 -s 192.168.1.100 -j ACCEPT - відкривати порт конкретній IP-адресі
+
+sudo iptables -L INPUT -n --line-numbers - перегляд правил за номерами
+
+sudo iptables -D INPUT [rule number] - видалення правила 
+
+/sudo/ iptables -A INPUT -p tcp --dport 22 -s 192.168.1.199 -j DROP - заборона IP-адреси на порт
+
+-------
+
+
+ps aux | grep nginx    # Пошук процесів  
+pstree -p             # Дерево процесів  
+lsof -i :80           # Хто використовує порт 80?  
+
+---
+
+vmstat 1 – статистика CPU, пам'яті, IO.
+dstat – моніторинг мережі, дисків у реальному часі.
+
+-----
+
+strace -p PID   -- для аналізу системних викликів.
+journalctl -u service_name  -- Перевіряємо логи
+
+----
+
+Таблиця маршрутизації ---   ip route show.
+
+------
+
+Налаштування IP:
+
+ip addr add 192.168.1.100/24 dev eth0  – додати IP-адресу
+dhclient eth0 – отримати IP через DHCP
+ip link set eth0 up - увімкнути інтерфейс  
+----
+
+nftables (нова заміна iptables):
+nft add table inet filter  
+nft add chain inet filter input { type filter hook input priority 0 \; }  
+nft add rule inet filter input tcp dport 22 accept 
+----
+
+Приклад скрипта для бекапу:
+#!/bin/bash  
+backup_dir="/var/backups"  
+tar -czf "$backup_dir/$(date +%Y-%m-%d).tar.gz" /home/user 
+-----
+
+Перевірка помилок:
+if ! ping -c 1 google.com; then  
+  echo "Помилка: немає інтернету!" >&2  
+  exit 1  
+fi  
+
+Робота з масивами:
+files=(*.txt)  
+for file in "${files[@]}"; do  
+  echo "Обробляю $file"  
+done  
+----
+
+--terraform graf | dot -- 
+
+terraform graph | dot -Tpng > graph.png
+
+
+
+--з параметром для повторного підключення бекенду: --
+
+terraform init -reconfigure
+
+
+перевірка всіх існуючих ресурсів
+aws resourcegroupstaggingapi get-resources
+
+окремо по реурсах
+
+aws s3 ls
+
+aws dynamodb list-tables
+
+aws ec2 describe-vpcs
+
+aws ec2 describe-subnets
+
+aws ec2 describe-internet-gateways
+
+aws ec2 describe-nat-gateways
+
+aws ecr describe-repositories
+
+----------------------------------------------------------
+--kubernetes (k8s) --
+
+1. Доавання кластера до kubeconfig
+aws eks --region <region> update-kubeconfig --name <cluster-name>
+
+2. Перевірка стану кластера:
+kubectl cluster-info
+
+3. Список усіх об'єктів у кластері:
+kubectl get all
+
+4. Зміна простору імен:
+kubectl config set-context --current --namespace=<namespace-name
+
+--Створення ресурсів--
+
+Застосування YAML-маніфесту.
+kubectl apply -f <file-name>.yaml
+
+Перевірка створених ресурс(це приклад ресурсу deployment)
+kubectl get deployment
+
+--Перевірка стану ресурсів--
+
+1. Список подів (Pods):
+kubectl get pod
+
+2. Детальна інформація про певний под
+kubectl describe pod <pod-name>
+
+3. Отримання логів поду:
+kubectl logs <pod-name>
+kubectl logs <pod-name> -c <container-name>
+
+
+--Оновлення та видалення ресурсів--
+
+1. Оновлення ресурсу (наприклад, Deployment).
+kubectl apply -f <file-name>.yaml
+
+2. Видалення ресурсу:
+kubectl delete -f <file-name>.yaml
+kubectl delete pod <pod-name>
+
+
+--Діагностика помилок--
+
+1. Перевірка стану вузлів (Nodes):
+kubectl get nodes
+
+2. Детальна діагностика.
+kubectl describe pod <pod-name>
+
+3. Моніторинг ресурсів.
+kubectl get pods --watch
+
+
+--Робота з просторами імен (Namespaces)--
+
+1. Перегляд усіх просторів імен:
+kubectl get namespaces
+
+2. Створення нового простору імен:
+kubectl create namespace <namespace-name>
+
+3. Видалення простору імен:
+kubectl delete namespace <namespace-name>
+
+
+--Корисні скорочення--
+
+1. Щоб отримати відповідь у форматі YAML чи JSON:
+kubectl get pods -o yaml
+
+2. Для швидкої перевірки всіх ресурсів у кластері
+kubectl get all --all-namespaces
+
+--helm--(прибрати <>)
+
+1. Додавання репозиторію Helm
+helm repo add ingress-nginx <https://kubernetes.github.io/ingress-nginx>
+helm repo update
+
+2. Інсталяція Helm Chart
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespac
+
+3. Перевірка встановлення
+kubectl get all -n ingress-nginx
+
+4. Адаптація параметрів
+Якщо вам потрібно змінити стандартні параметри, наприклад кількість реплік чи конфігурацію контролера, використовуйте файл values.yaml.
+
+Приклад базового values.yaml для NGINX Ingress:
+-----------------------------------------------
+controller:
+  replicaCount: 2
+  service:
+    type: LoadBalancer
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+-----------------------------------------
+
+Встановлення з цим файлом:
+helm install nginx-ingress ingress-nginx/ingress-nginx -n ingress-nginx -f values.yaml
+
+-- Prometheus + Grafana --
+helm repo add prometheus-community <https://prometheus-community.github.io/helm-charts>
+helm install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace
+
+helm repo add grafana <https://grafana.github.io/helm-charts>
+helm install grafana grafana/grafana --namespace monitoring
+
+-- Cert-Manager --
+helm repo add jetstack <https://charts.jetstack.io>
+helm repo update
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

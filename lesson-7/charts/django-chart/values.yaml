@@ -1,0 +1,22 @@
+# lesson-7/charts/values.yaml
+
+image:
+  repository: 768405431530.dkr.ecr.eu-west-1.amazonaws.com/lesson-7-ecr-helm
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+config:
+    POSTGRES_HOST: db 
+    POSTGRES_PORT: 5432
+    POSTGRES_USER: django_user
+    POSTGRES_DB: django_db
+    POSTGRES_PASSWORD: "pass9764gd"
+
+autoscaler:
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
