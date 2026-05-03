@@ -5,7 +5,7 @@ applications:
     namespace: argocd
     project: default
     source:
-      repoURL: https://github.com/GolovskoyNickolay/devops-ci-cd.git
+      repoURL: https://github.com/DmytroShirobokov92/devops-ci-cd.git
       path: lesson-8-9/charts/django-app
       targetRevision: lesson-8-9
       helm:
@@ -21,7 +21,7 @@ applications:
 
 # repositories:
 #   - name: example-app
-#     url:  https://github.com/GolovskoyNickolay/devops-ci-cd.git
+#     url:  https://github.com/DmytroShirobokov92/devops-ci-cd.git
 #     # username: m.Holovskoi
 #     # password: YOUR_PASS
 

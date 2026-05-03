@@ -60,7 +60,7 @@ spec:
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
-              git clone "https://$GIT_USERNAME:$GIT_PAT@github.com/GolovskoyNickolay/devops-ci-cd.git"              
+              git clone "https://$GIT_USERNAME:$GIT_PAT@github.com/DmytroShirobokov92/devops-ci-cd.git"
               cd devops-ci-cd
               git checkout lesson-8-9
 
